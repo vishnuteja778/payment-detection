@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudGuard AI - Online Payment Fraud Detection</title>
+    <meta name="description"
+        content="Advanced AI-powered fraud detection system for online payments. Protect your transactions with real-time analysis.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-shield">🛡️</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Analyzing Transaction<span class="loading-dots"></span></div>
+        <div class="loading-subtext">Our AI is scanning for fraud patterns</div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+
+    <!-- Floating Payment Icons -->
+    <div class="floating-icons">
+        <div class="floating-icon">💳</div>
+        <div class="floating-icon">🔒</div>
+        <div class="floating-icon">🛡️</div>
+        <div class="floating-icon">💰</div>
+        <div class="floating-icon">🔐</div>
+        <div class="floating-icon">💵</div>
+        <div class="floating-icon">🏦</div>
+        <div class="floating-icon">📊</div>
+        <div class="floating-icon">✅</div>
+        <div class="floating-icon">🔍</div>
+        <div class="floating-icon">💎</div>
+        <div class="floating-icon">⚡</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">FraudGuard AI</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="#detect">Detect</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="glass-card" id="detect">
+            <!-- Card Header -->
+            <header class="card-header">
+                <div class="card-icon">🔒</div>
+                <h1 class="card-title">Transaction Analysis</h1>
+                <p class="card-subtitle">Enter transaction details to detect potential fraud using AI</p>
+            </header>
+
+            <!-- Detection Form -->
+            <form action="/predict" method="POST" class="fraud-form" id="fraudForm">
+                <!-- Transaction Type -->
+                <div class="form-group">
+                    <label for="type">
+                        <span class="label-icon">💳</span>
+                        Transaction Type
+                    </label>
+                    <select name="type" id="type" class="form-input form-select" required>
+                        <option value="" disabled selected>Select transaction type</option>
+                        <option value="PAYMENT">💵 PAYMENT</option>
+                        <option value="TRANSFER">🔄 TRANSFER</option>
+                        <option value="CASH_OUT">💸 CASH_OUT</option>
+                        <option value="DEBIT">🏧 DEBIT</option>
+                        <option value="CASH_IN">💰 CASH_IN</option>
+                    </select>
+                </div>
+
+                <!-- Amount -->
+                <div class="form-group">
+                    <label for="amount">
+                        <span class="label-icon">💰</span>
+                        Transaction Amount ($)
+                    </label>
+                    <input type="number" step="0.01" name="amount" id="amount" class="form-input"
+                        placeholder="e.g. 1,500.00" required>
+                </div>
+
+                <!-- Sender Balance Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="oldbalanceOrg">
+                            <span class="label-icon">📤</span>
+                            Sender Old Balance
+                        </label>
+                        <input type="number" step="0.01" name="oldbalanceOrg" id="oldbalanceOrg" class="form-input"
+                            placeholder="Before transaction" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newbalanceOrig">
+                            <span class="label-icon">📤</span>
+                            Sender New Balance
+                        </label>
+                        <input type="number" step="0.01" name="newbalanceOrig" id="newbalanceOrig" class="form-input"
+                            placeholder="After transaction" required>
+                    </div>
+                </div>
+
+                <!-- Receiver Balance Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="oldbalanceDest">
+                            <span class="label-icon">📥</span>
+                            Receiver Old Balance
+                        </label>
+                        <input type="number" step="0.01" name="oldbalanceDest" id="oldbalanceDest" class="form-input"
+                            placeholder="Before transaction" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newbalanceDest">
+                            <span class="label-icon">📥</span>
+                            Receiver New Balance
+                        </label>
+                        <input type="number" step="0.01" name="newbalanceDest" id="newbalanceDest" class="form-input"
+                            placeholder="After transaction" required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit">
+                    <span>Analyze Transaction</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </form>
+        </div>
+
+
+    </main>
+
+    <!-- Loading Animation Script -->
+    <script>
+        document.getElementById('fraudForm').addEventListener('submit', function (e) {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - FraudGuard AI</title>
+    <meta name="description" content="Transaction analysis result from FraudGuard AI fraud detection system.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+
+    <!-- Floating Payment Icons -->
+    <div class="floating-icons">
+        <div class="floating-icon">💳</div>
+        <div class="floating-icon">🔒</div>
+        <div class="floating-icon">🛡️</div>
+        <div class="floating-icon">💰</div>
+        <div class="floating-icon">🔐</div>
+        <div class="floating-icon">💵</div>
+        <div class="floating-icon">🏦</div>
+        <div class="floating-icon">📊</div>
+        <div class="floating-icon">✅</div>
+        <div class="floating-icon">🔍</div>
+        <div class="floating-icon">💎</div>
+        <div class="floating-icon">⚡</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">FraudGuard AI</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/detect">Detect Fraud</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="glass-card result-container">
+            <!-- Card Header -->
+            <header class="card-header">
+                <div class="card-icon">📊</div>
+                <h1 class="card-title">Analysis Complete</h1>
+                <p class="card-subtitle">AI-powered fraud detection result</p>
+            </header>
+
+            {% if prediction == 1 %}
+            <!-- FRAUD DETECTED -->
+            <div class="result-card fraud">
+                <div class="result-icon">⚠️</div>
+                <h2 class="result-title">Fraud Detected!</h2>
+                <p class="result-message">
+                    This transaction exhibits patterns consistent with fraudulent activity.
+                    <br>We recommend blocking this transaction and investigating further.
+                </p>
+            </div>
+
+            {% elif prediction == 0 %}
+            <!-- TRANSACTION SAFE -->
+            <div class="result-card safe">
+                <div class="result-icon">✅</div>
+                <h2 class="result-title">Transaction Verified</h2>
+                <p class="result-message">
+                    No fraudulent patterns were detected in this transaction.
+                    <br>The transaction appears to be legitimate.
+                </p>
+            </div>
+
+            {% else %}
+            <!-- ERROR STATE -->
+            <div class="result-card error">
+                <div class="result-icon">❓</div>
+                <h2 class="result-title">Analysis Error</h2>
+                <p class="result-message">
+                    Something went wrong during the analysis.
+                    <br>Please try again or contact support.
+                </p>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/detect" class="btn btn-primary">
+                    <span>🔄</span>
+                    <span>Check Another</span>
+                </a>
+                <a href="/" class="btn btn-secondary">
+                    <span>🏠</span>
+                    <span>Back to Home</span>
+                </a>
+            </div>
+        </div>
+
+
+    </main>
+</body>
+
+</html>
