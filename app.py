@@ -94,6 +94,10 @@ def predict():
 
     except Exception as e:
         print(f"Error during prediction: {e}")
+        import traceback
+        with open('app_error.log', 'w') as err_file:
+            err_file.write(f"Error: {e}\n")
+            err_file.write(traceback.format_exc())
         return render_template('result.html', prediction=-1) # Handle error gracefully
 
 if __name__ == '__main__':
