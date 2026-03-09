@@ -1,0 +1,20 @@
+{
+    "Logistic Regression": {
+        "Accuracy": 0.9623,
+        "Precision": 0.2814,
+        "Recall": 0.9142,
+        "F1": 0.4303
+    },
+    "Decision Tree": {
+        "Accuracy": 0.9985,
+        "Precision": 0.8902,
+        "Recall": 0.8156,
+        "F1": 0.8513
+    },
+    "Random Forest": {
+        "Accuracy": 0.9994,
+        "Precision": 0.9671,
+        "Recall": 0.8234,
+        "F1": 0.8895
+    }
+}

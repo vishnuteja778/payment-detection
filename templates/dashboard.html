@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — FraudGuard AI</title>
+    <meta name="description" content="Model performance comparison and analytics dashboard.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .dash-page {
+            min-height: 100vh;
+            padding: 120px 2rem 4rem;
+        }
+
+        .dash-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dash-header {
+            margin-bottom: 3rem;
+        }
+
+        .dash-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin-bottom: .5rem;
+        }
+
+        .dash-header p {
+            color: var(--text-2);
+            font-size: 1rem;
+            max-width: 600px;
+        }
+
+        /* Section cards */
+        .dash-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dash-section h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        /* Model comparison table */
+        .model-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .model-table th {
+            text-align: left;
+            padding: .75rem 1rem;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .model-table td {
+            padding: .85rem 1rem;
+            font-size: .95rem;
+            color: var(--text-1);
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+        }
+
+        .model-table tbody tr {
+            transition: background .15s ease;
+        }
+
+        .model-table tbody tr:hover {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .model-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .model-name {
+            font-weight: 700;
+        }
+
+        .model-name.best {
+            background: var(--grad-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Metric cell with mini bar */
+        .metric-cell {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .metric-bar {
+            width: 80px;
+            height: 6px;
+            background: rgba(255, 255, 255, .06);
+            border-radius: 99px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 1.2s cubic-bezier(.16, 1, .3, 1);
+            width: 0;
+        }
+
+        .fill-accuracy {
+            background: #3b82f6;
+        }
+
+        .fill-precision {
+            background: #d4a206;
+        }
+
+        .fill-recall {
+            background: #10b981;
+        }
+
+        .fill-f1 {
+            background: linear-gradient(90deg, #1a56db, #d4a206);
+        }
+
+        .best-badge {
+            display: inline-flex;
+            padding: .15rem .55rem;
+            border-radius: 99px;
+            font-size: .7rem;
+            font-weight: 700;
+            background: rgba(26, 86, 219, .15);
+            color: #3b82f6;
+            margin-left: .5rem;
+        }
+
+        /* Charts grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-card h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 320px;
+        }
+
+        /* Confusion matrix */
+        .cm-grid {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 0;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .cm-corner {
+            padding: .6rem;
+        }
+
+        .cm-header {
+            padding: .6rem .8rem;
+            text-align: center;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .cm-label {
+            padding: .6rem .8rem;
+            text-align: right;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-3);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .cm-cell {
+            padding: 1.2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin: 3px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .cm-tp {
+            background: rgba(16, 185, 129, .15);
+            color: #34d399;
+        }
+
+        .cm-tn {
+            background: rgba(59, 130, 246, .12);
+            color: #60a5fa;
+        }
+
+        .cm-fp {
+            background: rgba(245, 158, 11, .12);
+            color: #fbbf24;
+        }
+
+        .cm-fn {
+            background: rgba(239, 68, 68, .12);
+            color: #f87171;
+        }
+
+        .cm-subtitle {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: .82rem;
+            color: var(--text-3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="mesh-bg"></div>
+
+    <!-- NAV -->
+    <header class="site-header scrolled">
+        <nav class="nav-inner">
+            <a href="/" class="brand">
+                <svg class="brand-icon" viewBox="0 0 28 28" fill="none">
+                    <path d="M14 2L4 7v8c0 5.55 4.3 10.74 10 12 5.7-1.26 10-6.45 10-12V7L14 2z" fill="url(#sg)" />
+                    <path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="sg" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#1a56db" />
+                            <stop offset="1" stop-color="#d4a206" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>FraudGuard<span class="brand-ai"> AI</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/detect" class="nav-link">Detect Fraud</a></li>
+                <li><a href="/dashboard" class="nav-link" style="color:var(--text-1)">Dashboard</a></li>
+                <li><a href="/history" class="nav-link">History</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="dash-page">
+        <div class="dash-inner">
+
+            <div class="dash-header">
+                <h1>📊 Model Dashboard</h1>
+                <p>Performance comparison of machine learning models trained on 6.3 million financial transactions.</p>
+            </div>
+
+            <!-- Model Comparison Table -->
+            <div class="dash-section">
+                <h2>🏆 Model Comparison</h2>
+                <table class="model-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for name, m in metrics.items() %}
+                        <tr>
+                            <td>
+                                <span class="model-name {% if loop.last %}best{% endif %}">{{ name }}</span>
+                                {% if loop.last %}<span class="best-badge">★ BEST</span>{% endif %}
+                            </td>
+                            <td>
+                                <div class="metric-cell">
+                                    <span>{{ '%.2f' % (m.Accuracy * 100) }}%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill fill-accuracy" data-width="{{ m.Accuracy * 100 }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-cell">
+                                    <span>{{ '%.2f' % (m.Precision * 100) }}%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill fill-precision" data-width="{{ m.Precision * 100 }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-cell">
+                                    <span>{{ '%.2f' % (m.Recall * 100) }}%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill fill-recall" data-width="{{ m.Recall * 100 }}"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-cell">
+                                    <span>{{ '%.2f' % (m.F1 * 100) }}%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill fill-f1" data-width="{{ m.F1 * 100 }}"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+
+                <!-- Feature Importance -->
+                <div class="chart-card">
+                    <h2>⚡ Feature Importance</h2>
+                    <div class="chart-wrap">
+                        <canvas id="featureChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix -->
+                <div class="chart-card">
+                    <h2>🎯 Confusion Matrix <span style="font-weight:400;font-size:.82rem;color:var(--text-3)">(Random
+                            Forest)</span></h2>
+                    {% if confusion_matrix and confusion_matrix.matrix %}
+                    <div class="cm-grid">
+                        <div class="cm-corner"></div>
+                        <div class="cm-header">Predicted<br>Legit</div>
+                        <div class="cm-header">Predicted<br>Fraud</div>
+
+                        <div class="cm-label">Actual<br>Legit</div>
+                        <div class="cm-cell cm-tn">{{ '{:,}'.format(confusion_matrix.matrix[0][0]) }}<br><span
+                                style="font-size:.7rem;opacity:.7">True Neg</span></div>
+                        <div class="cm-cell cm-fp">{{ '{:,}'.format(confusion_matrix.matrix[0][1]) }}<br><span
+                                style="font-size:.7rem;opacity:.7">False Pos</span></div>
+
+                        <div class="cm-label">Actual<br>Fraud</div>
+                        <div class="cm-cell cm-fn">{{ '{:,}'.format(confusion_matrix.matrix[1][0]) }}<br><span
+                                style="font-size:.7rem;opacity:.7">False Neg</span></div>
+                        <div class="cm-cell cm-tp">{{ '{:,}'.format(confusion_matrix.matrix[1][1]) }}<br><span
+                                style="font-size:.7rem;opacity:.7">True Pos</span></div>
+                    </div>
+                    <p class="cm-subtitle">Evaluated on {{ '{:,}'.format(confusion_matrix.matrix[0][0] +
+                        confusion_matrix.matrix[0][1] + confusion_matrix.matrix[1][0] + confusion_matrix.matrix[1][1])
+                        }} test transactions</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="dash-section" style="margin-top:2rem">
+                <h2>📈 Model Comparison Radar</h2>
+                <div style="max-width:500px;margin:0 auto;position:relative;height:380px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const glow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', e => {
+            glow.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+        }, { passive: true });
+
+        const toggle = document.getElementById('navToggle');
+        const menu = document.getElementById('navMenu');
+        toggle?.addEventListener('click', () => { menu.classList.toggle('open'); toggle.classList.toggle('open'); });
+
+        // Animate metric bars
+        document.querySelectorAll('.metric-fill').forEach(bar => {
+            requestAnimationFrame(() => {
+                setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 400);
+            });
+        });
+
+        // Chart.js global config for dark theme
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = 'rgba(255,255,255,.06)';
+        Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
+
+        // Feature Importance chart
+        const featureData = {{ importance | tojson }};
+        if (featureData && featureData.features) {
+            const labels = featureData.features.map(f => {
+                const names = {
+                    'type': 'Transaction Type',
+                    'amount': 'Amount',
+                    'oldbalanceOrg': 'Sender Old Balance',
+                    'newbalanceOrig': 'Sender New Balance',
+                    'oldbalanceDest': 'Receiver Old Balance',
+                    'newbalanceDest': 'Receiver New Balance'
+                };
+                return names[f] || f;
+            });
+            const values = featureData.importances;
+
+            // Sort by importance
+            const sorted = labels.map((l, i) => ({ label: l, value: values[i] }))
+                .sort((a, b) => b.value - a.value);
+
+            new Chart(document.getElementById('featureChart'), {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(s => s.label),
+                    datasets: [{
+                        data: sorted.map(s => (s.value * 100).toFixed(1)),
+                        backgroundColor: [
+                            'rgba(26, 86, 219, .7)',
+                            'rgba(212, 162, 6, .7)',
+                            'rgba(59, 130, 246, .6)',
+                            'rgba(251, 191, 36, .6)',
+                            'rgba(26, 86, 219, .4)',
+                            'rgba(212, 162, 6, .4)',
+                        ],
+                        borderRadius: 6,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: { label: ctx => ctx.parsed.x + '% importance' }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Importance (%)' }, grid: { color: 'rgba(255,255,255,.04)' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Radar chart
+        const metricsData = {{ metrics | tojson }};
+        if (metricsData) {
+            const modelNames = Object.keys(metricsData);
+            const colors = [
+                { bg: 'rgba(59,130,246,.15)', border: '#3b82f6' },
+                { bg: 'rgba(16,185,129,.15)', border: '#10b981' },
+                { bg: 'rgba(212,162,6,.15)', border: '#d4a206' },
+            ];
+
+            new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+                    datasets: modelNames.map((name, i) => ({
+                        label: name,
+                        data: [
+                            metricsData[name].Accuracy * 100,
+                            metricsData[name].Precision * 100,
+                            metricsData[name].Recall * 100,
+                            metricsData[name].F1 * 100,
+                        ],
+                        backgroundColor: colors[i % 3].bg,
+                        borderColor: colors[i % 3].border,
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: colors[i % 3].border,
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0, max: 100,
+                            ticks: { stepSize: 25, backdropColor: 'transparent' },
+                            grid: { color: 'rgba(255,255,255,.08)' },
+                            pointLabels: { font: { size: 13, weight: '600' } },
+                            angleLines: { color: 'rgba(255,255,255,.06)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -5,20 +5,25 @@
 
 /* ─── Tokens ─── */
 :root {
-    --bg: #050810;
+    --bg: #020a1a;
     --surface: rgba(255, 255, 255, 0.04);
     --surface-2: rgba(255, 255, 255, 0.07);
     --border: rgba(255, 255, 255, 0.09);
     --border-h: rgba(255, 255, 255, 0.18);
 
-    --indigo: #6366f1;
-    --cyan: #06b6d4;
+    --indigo: #1a56db;
+    --cyan: #d4a206;
     --green: #10b981;
     --red: #ef4444;
     --amber: #f59e0b;
 
-    --grad-brand: linear-gradient(135deg, #6366f1, #06b6d4);
-    --grad-text: linear-gradient(110deg, #a5b4fc 0%, #06b6d4 60%, #a5b4fc 100%);
+    --gold: #d4a206;
+    --gold-light: #fbbf24;
+    --blue: #1a56db;
+    --blue-light: #3b82f6;
+
+    --grad-brand: linear-gradient(135deg, #1a56db, #d4a206);
+    --grad-text: linear-gradient(110deg, #93c5fd 0%, #fbbf24 60%, #93c5fd 100%);
 
     --text-1: #f1f5f9;
     --text-2: #94a3b8;
@@ -74,9 +79,9 @@ svg {
     z-index: -1;
     pointer-events: none;
     background:
-        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(99, 102, 241, .18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6, 182, 212, .14) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(16, 185, 129, .06) 0%, transparent 70%);
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(26, 86, 219, .2) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(212, 162, 6, .12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(59, 130, 246, .08) 0%, transparent 70%);
     animation: meshDrift 18s ease-in-out infinite alternate;
 }
 
@@ -99,7 +104,7 @@ svg {
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(99, 102, 241, .15) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(26, 86, 219, .18) 0%, transparent 65%);
     transform: translate(-50%, -50%);
     /* initial offscreen */
     pointer-events: none;
@@ -204,7 +209,7 @@ svg {
 
 .nav-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, .45);
+    box-shadow: 0 8px 24px rgba(26, 86, 219, .45);
 }
 
 .nav-toggle {
@@ -244,7 +249,7 @@ svg {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, .5);
+    box-shadow: 0 12px 32px rgba(26, 86, 219, .5);
 }
 
 .btn-primary svg {
@@ -286,8 +291,8 @@ svg {
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--indigo);
-    background: rgba(99, 102, 241, .12);
-    border: 1px solid rgba(99, 102, 241, .25);
+    background: rgba(26, 86, 219, .12);
+    border: 1px solid rgba(26, 86, 219, .25);
     padding: .3rem .85rem;
     border-radius: 99px;
     margin-bottom: 1.25rem;
@@ -429,7 +434,7 @@ svg {
 .orb-1 {
     width: 260px;
     height: 260px;
-    background: radial-gradient(circle, rgba(99, 102, 241, .35), transparent 70%);
+    background: radial-gradient(circle, rgba(26, 86, 219, .35), transparent 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -439,7 +444,7 @@ svg {
 .orb-2 {
     width: 180px;
     height: 180px;
-    background: radial-gradient(circle, rgba(6, 182, 212, .3), transparent 70%);
+    background: radial-gradient(circle, rgba(212, 162, 6, .3), transparent 70%);
     top: 20%;
     right: 10%;
     animation: orbDrift 10s ease-in-out infinite reverse;
@@ -484,13 +489,13 @@ svg {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    border: 1px solid rgba(99, 102, 241, .3);
+    border: 1px solid rgba(26, 86, 219, .3);
     animation: ringExpand 3s ease-in-out infinite;
 }
 
 .ring-b {
     inset: -18px;
-    border-color: rgba(6, 182, 212, .2);
+    border-color: rgba(212, 162, 6, .2);
     animation-delay: -1.5s;
     animation-duration: 3.5s;
 }
@@ -521,7 +526,7 @@ svg {
 .shield-core svg {
     width: 120px;
     height: 120px;
-    filter: drop-shadow(0 0 30px rgba(99, 102, 241, .7));
+    filter: drop-shadow(0 0 30px rgba(26, 86, 219, .7));
 }
 
 @keyframes shieldFloat {
@@ -688,7 +693,7 @@ svg {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at top left, rgba(99, 102, 241, .1), transparent 60%);
+    background: radial-gradient(circle at top left, rgba(26, 86, 219, .1), transparent 60%);
     opacity: 0;
     transition: opacity .3s ease;
 }
@@ -730,9 +735,9 @@ svg {
 }
 
 .step-card:hover .step-icon {
-    background: rgba(99, 102, 241, .15);
-    color: #a5b4fc;
-    border-color: rgba(99, 102, 241, .3);
+    background: rgba(26, 86, 219, .15);
+    color: #93c5fd;
+    border-color: rgba(26, 86, 219, .3);
 }
 
 .step-icon svg {
@@ -893,7 +898,7 @@ svg {
     width: 600px;
     height: 350px;
     border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(99, 102, 241, .25), transparent 70%);
+    background: radial-gradient(ellipse, rgba(26, 86, 219, .25), transparent 70%);
     pointer-events: none;
     filter: blur(40px);
     animation: glowBreath 5s ease-in-out infinite;
@@ -1016,26 +1021,26 @@ svg {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: var(--indigo);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, .2);
+    border-color: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, .3);
 }
 
 /* Fix white dropdown popup in all browsers */
 .form-group select {
-    background-color: #0d1120;
+    background-color: #071028;
     /* solid dark — overrides the rgba that shows white on popup */
     color: var(--text-1);
 }
 
 .form-group select option {
-    background-color: #0d1120;
+    background-color: #071028;
     color: #f1f5f9;
 }
 
 .form-group select option:hover,
 .form-group select option:checked {
-    background-color: #1e2140;
-    color: #a5b4fc;
+    background-color: #0f1d3d;
+    color: var(--gold-light);
 }
 
 .form-grid {
@@ -1065,7 +1070,7 @@ svg {
 
 .form-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, .5);
+    box-shadow: 0 12px 32px rgba(26, 86, 219, .5);
 }
 
 .form-submit:active {

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History — FraudGuard AI</title>
+    <meta name="description" content="View past transaction analysis results.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        .history-page {
+            min-height: 100vh;
+            padding: 120px 2rem 4rem;
+        }
+
+        .history-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .history-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .history-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin-bottom: .5rem;
+        }
+
+        .history-header p {
+            color: var(--text-2);
+            font-size: 1rem;
+        }
+
+        /* Table container */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .txn-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .txn-table th {
+            text-align: left;
+            padding: .85rem 1rem;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, .02);
+        }
+
+        .txn-table td {
+            padding: .75rem 1rem;
+            font-size: .9rem;
+            color: var(--text-2);
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+        }
+
+        .txn-table tbody tr {
+            transition: background .15s ease;
+        }
+
+        .txn-table tbody tr:hover {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .txn-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: .25rem .7rem;
+            border-radius: 99px;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .badge-fraud {
+            background: rgba(239, 68, 68, .12);
+            color: #f87171;
+        }
+
+        .badge-safe {
+            background: rgba(16, 185, 129, .12);
+            color: #34d399;
+        }
+
+        /* Confidence mini bar */
+        .conf-mini {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .conf-bar-sm {
+            width: 60px;
+            height: 5px;
+            background: rgba(255, 255, 255, .08);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .conf-fill-sm {
+            height: 100%;
+            border-radius: 99px;
+            background: var(--grad-brand);
+        }
+
+        /* PDF link */
+        .pdf-link {
+            color: var(--blue-light);
+            font-size: .82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .2s;
+        }
+
+        .pdf-link:hover {
+            color: var(--gold-light);
+        }
+
+        /* Amount formatting */
+        .amount-cell {
+            font-weight: 600;
+            color: var(--text-1);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-3);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .txn-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="mesh-bg"></div>
+
+    <!-- NAV -->
+    <header class="site-header scrolled">
+        <nav class="nav-inner">
+            <a href="/" class="brand">
+                <svg class="brand-icon" viewBox="0 0 28 28" fill="none">
+                    <path d="M14 2L4 7v8c0 5.55 4.3 10.74 10 12 5.7-1.26 10-6.45 10-12V7L14 2z" fill="url(#sg)" />
+                    <path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="sg" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#1a56db" />
+                            <stop offset="1" stop-color="#d4a206" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>FraudGuard<span class="brand-ai"> AI</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/detect" class="nav-link">Detect Fraud</a></li>
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/history" class="nav-link" style="color:var(--text-1)">History</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="history-page">
+        <div class="history-inner">
+            <div class="history-header">
+                <h1>📋 Transaction History</h1>
+                <p>View all past transaction analyses and download PDF reports.</p>
+            </div>
+
+            {% if transactions | length > 0 %}
+            <div class="table-wrap">
+                <table class="txn-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Result</th>
+                            <th>Confidence</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in transactions %}
+                        <tr>
+                            <td style="color:var(--text-3);font-size:.82rem">TXN-{{ '%05d' % txn.id }}</td>
+                            <td style="font-size:.85rem">{{ txn.timestamp }}</td>
+                            <td>
+                                {% if txn.type == 'TRANSFER' %}💸{% elif txn.type == 'CASH_OUT' %}🏧{% elif txn.type ==
+                                'CASH_IN' %}💰{% elif txn.type == 'PAYMENT' %}💳{% else %}🏦{% endif %}
+                                {{ txn.type }}
+                            </td>
+                            <td class="amount-cell">${{ '{:,.2f}'.format(txn.amount) }}</td>
+                            <td>
+                                {% if txn.prediction == 1 %}
+                                <span class="badge badge-fraud">🚨 Fraud</span>
+                                {% else %}
+                                <span class="badge badge-safe">✅ Safe</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="conf-mini">
+                                    <span style="font-size:.85rem;font-weight:600;color:var(--text-1)">{{ txn.confidence
+                                        }}%</span>
+                                    <div class="conf-bar-sm">
+                                        <div class="conf-fill-sm" style="width:{{ txn.confidence }}%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="/report/{{ txn.id }}" class="pdf-link">📄 PDF</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="table-wrap">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>No transactions analyzed yet.</p>
+                    <a href="/detect" class="btn-primary">Analyze Your First Transaction</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        const glow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', e => {
+            glow.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+        }, { passive: true });
+
+        const toggle = document.getElementById('navToggle');
+        const menu = document.getElementById('navMenu');
+        toggle?.addEventListener('click', () => { menu.classList.toggle('open'); toggle.classList.toggle('open'); });
+    </script>
+</body>
+
+</html>

@@ -10,7 +10,7 @@
     left: 0;
     height: 3px;
     width: 0%;
-    background: linear-gradient(90deg, #6366f1, #06b6d4);
+    background: linear-gradient(90deg, #1a56db, #d4a206);
     z-index: 9999;
     transition: width .05s linear;
     border-radius: 0 2px 2px 0;
@@ -21,7 +21,7 @@
     position: fixed;
     width: 40px;
     height: 40px;
-    border: 1.5px solid rgba(99, 102, 241, .6);
+    border: 1.5px solid rgba(26, 86, 219, .6);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9998;
@@ -34,7 +34,7 @@
     position: fixed;
     width: 5px;
     height: 5px;
-    background: #6366f1;
+    background: #1a56db;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
@@ -51,8 +51,8 @@ body:hover .cursor-dot {
 .cursor.hovering {
     width: 60px;
     height: 60px;
-    border-color: rgba(6, 182, 212, .8);
-    background: rgba(99, 102, 241, .06);
+    border-color: rgba(212, 162, 6, .8);
+    background: rgba(26, 86, 219, .06);
 }
 
 /* ─── Morph-in base state (before reveal) ─── */
@@ -188,7 +188,7 @@ body:hover .cursor-dot {
 .tl-progress {
     width: 100%;
     height: 0%;
-    background: linear-gradient(180deg, #6366f1, #06b6d4);
+    background: linear-gradient(180deg, #1a56db, #d4a206);
     transition: height .05s linear;
     border-radius: 2px;
 }
@@ -226,7 +226,7 @@ body:hover .cursor-dot {
 .scroll-cue-line {
     width: 1px;
     height: 48px;
-    background: linear-gradient(180deg, transparent, rgba(99, 102, 241, .7));
+    background: linear-gradient(180deg, transparent, rgba(26, 86, 219, .7));
     animation: lineDrop 1.5s ease-in-out infinite;
 }
 
@@ -293,14 +293,14 @@ body:hover .cursor-dot {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(99, 102, 241, .1), transparent 60%);
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(26, 86, 219, .12), transparent 60%);
     opacity: 0;
     transition: opacity .4s ease;
     pointer-events: none;
 }
 
 .bento-card:hover {
-    border-color: rgba(99, 102, 241, .4);
+    border-color: rgba(26, 86, 219, .4);
     box-shadow: 0 16px 48px rgba(0, 0, 0, .4);
 }
 
@@ -414,7 +414,7 @@ body:hover .cursor-dot {
 }
 
 .h1-grad {
-    background: linear-gradient(110deg, #a5b4fc 0%, #06b6d4 50%, #a5b4fc 100%);
+    background: linear-gradient(110deg, #93c5fd 0%, #fbbf24 50%, #93c5fd 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -466,7 +466,7 @@ body:hover .cursor-dot {
 .orb-a {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(99, 102, 241, .22), transparent 70%);
+    background: radial-gradient(circle, rgba(26, 86, 219, .22), transparent 70%);
     top: -10%;
     left: -10%;
 }
@@ -474,7 +474,7 @@ body:hover .cursor-dot {
 .orb-b {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(6, 182, 212, .18), transparent 70%);
+    background: radial-gradient(circle, rgba(212, 162, 6, .18), transparent 70%);
     bottom: -5%;
     right: -5%;
 }
@@ -493,7 +493,7 @@ body:hover .cursor-dot {
     width: 180px;
     height: auto;
     margin: 0 auto;
-    filter: drop-shadow(0 0 40px rgba(99, 102, 241, .8));
+    filter: drop-shadow(0 0 40px rgba(26, 86, 219, .8));
     animation: shieldFloat 5s ease-in-out infinite;
 }
 
@@ -515,7 +515,7 @@ body:hover .cursor-dot {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 1px solid rgba(99, 102, 241, .25);
+    border: 1px solid rgba(26, 86, 219, .25);
     animation: haloExpand 3s ease-in-out infinite;
 }
 
@@ -627,8 +627,8 @@ body:hover .cursor-dot {
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--indigo);
-    background: rgba(99, 102, 241, .1);
-    border: 1px solid rgba(99, 102, 241, .2);
+    background: rgba(26, 86, 219, .1);
+    border: 1px solid rgba(26, 86, 219, .2);
     padding: .28rem .8rem;
     border-radius: 99px;
     display: inline-block;
@@ -746,7 +746,7 @@ body:hover .cursor-dot {
 }
 
 .tl-item:hover {
-    border-color: rgba(99, 102, 241, .4);
+    border-color: rgba(26, 86, 219, .4);
     transform: translateY(-6px);
 }
 
@@ -759,7 +759,7 @@ body:hover .cursor-dot {
     height: 14px;
     border-radius: 50%;
     background: var(--grad-brand);
-    box-shadow: 0 0 12px rgba(99, 102, 241, .6);
+    box-shadow: 0 0 12px rgba(26, 86, 219, .6);
 }
 
 .tl-num {
@@ -814,7 +814,7 @@ body:hover .cursor-dot {
     left: 50%;
     width: 700px;
     height: 400px;
-    background: radial-gradient(ellipse, rgba(99, 102, 241, .2), transparent 70%);
+    background: radial-gradient(ellipse, rgba(26, 86, 219, .2), transparent 70%);
     transform: translate(-50%, -50%);
     pointer-events: none;
     filter: blur(50px);

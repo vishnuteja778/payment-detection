@@ -11,12 +11,136 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <style>
+        /* Floating background icons */
+        .float-icons {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .fi {
+            position: absolute;
+            font-size: 2.4rem;
+            opacity: .08;
+            animation: fFloat 16s ease-in-out infinite;
+        }
+
+        .fi:nth-child(1) {
+            top: 8%;
+            left: 5%;
+            animation-delay: 0s;
+            font-size: 2.8rem;
+        }
+
+        .fi:nth-child(2) {
+            top: 15%;
+            right: 8%;
+            animation-delay: -3s;
+            font-size: 2rem;
+        }
+
+        .fi:nth-child(3) {
+            top: 35%;
+            left: 12%;
+            animation-delay: -6s;
+            font-size: 3rem;
+        }
+
+        .fi:nth-child(4) {
+            top: 50%;
+            right: 5%;
+            animation-delay: -2s;
+        }
+
+        .fi:nth-child(5) {
+            top: 70%;
+            left: 8%;
+            animation-delay: -8s;
+            font-size: 2.6rem;
+        }
+
+        .fi:nth-child(6) {
+            top: 80%;
+            right: 12%;
+            animation-delay: -4s;
+            font-size: 1.8rem;
+        }
+
+        .fi:nth-child(7) {
+            top: 25%;
+            left: 85%;
+            animation-delay: -10s;
+            font-size: 2.2rem;
+        }
+
+        .fi:nth-child(8) {
+            top: 60%;
+            left: 3%;
+            animation-delay: -12s;
+            font-size: 3.2rem;
+        }
+
+        .fi:nth-child(9) {
+            top: 45%;
+            right: 15%;
+            animation-delay: -5s;
+            font-size: 1.6rem;
+        }
+
+        .fi:nth-child(10) {
+            top: 90%;
+            left: 50%;
+            animation-delay: -7s;
+            font-size: 2rem;
+        }
+
+        @keyframes fFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: .07;
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+                opacity: .12;
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-3deg);
+                opacity: .09;
+            }
+
+            75% {
+                transform: translateY(-25px) rotate(4deg);
+                opacity: .11;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
     <div class="cursor-glow" id="cursorGlow"></div>
     <div class="mesh-bg"></div>
+
+    <!-- Floating Background Icons -->
+    <div class="float-icons">
+        <span class="fi">💸</span>
+        <span class="fi">🏧</span>
+        <span class="fi">💳</span>
+        <span class="fi">🔒</span>
+        <span class="fi">💰</span>
+        <span class="fi">🛡️</span>
+        <span class="fi">📊</span>
+        <span class="fi">🏦</span>
+        <span class="fi">⚡</span>
+        <span class="fi">🔐</span>
+    </div>
 
     <!-- NAV -->
     <header class="site-header scrolled" id="siteHeader">
@@ -28,8 +152,8 @@
                         stroke-linejoin="round" />
                     <defs>
                         <linearGradient id="sg" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#6366f1" />
-                            <stop offset="1" stop-color="#06b6d4" />
+                            <stop stop-color="#1a56db" />
+                            <stop offset="1" stop-color="#d4a206" />
                         </linearGradient>
                     </defs>
                 </svg>
@@ -38,6 +162,8 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="/detect" class="nav-link" style="color:var(--text-1)">Detect Fraud</a></li>
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/history" class="nav-link">History</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -52,7 +178,7 @@
     </div>
 
     <!-- FORM -->
-    <main class="detect-page">
+    <main class="detect-page" style="position:relative;z-index:1;">
         <div class="detect-card">
             <h1>Transaction Analysis</h1>
             <p class="lead">Enter the transaction details below. Our AI model will classify it as <strong>Safe</strong>
