@@ -4,256 +4,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FraudGuard AI - Next-Gen Payment Security</title>
+    <title>FraudGuard AI — Payment Fraud Detection</title>
     <meta name="description"
-        content="AI-powered fraud detection platform protecting millions of transactions worldwide">
+        content="AI-powered payment fraud detection — college project showcasing machine learning for financial security.">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='scroll.css') }}">
 </head>
 
-<body>
-    <!-- Animated Background -->
-    <div class="bg-animated"></div>
+<body class="home-body">
 
-    <!-- Floating Payment Icons -->
-    <div class="floating-icons">
-        <div class="floating-icon">💳</div>
-        <div class="floating-icon">🔒</div>
-        <div class="floating-icon">🛡️</div>
-        <div class="floating-icon">💰</div>
-        <div class="floating-icon">🔐</div>
-        <div class="floating-icon">💵</div>
-        <div class="floating-icon">🏦</div>
-        <div class="floating-icon">📊</div>
-        <div class="floating-icon">✅</div>
-        <div class="floating-icon">🔍</div>
-        <div class="floating-icon">💎</div>
-        <div class="floating-icon">⚡</div>
-    </div>
+    <!-- Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <a href="/" class="logo">
-            <span class="logo-icon">🛡️</span>
-            <span class="logo-text">FraudGuard AI</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="/" class="active">Home</a></li>
-            <li><a href="/detect">Detect Fraud</a></li>
-        </ul>
-    </nav>
+    <!-- Scroll progress bar -->
+    <div class="scroll-bar" id="scrollBar"></div>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <!-- 3D Animated Shield -->
-            <div class="shield-3d">
-                <div class="shield-layer shield-back"></div>
-                <div class="shield-layer shield-mid"></div>
-                <div class="shield-layer shield-front">🛡️</div>
-                <div class="shield-glow"></div>
+    <!-- Mesh -->
+    <div class="mesh-bg"></div>
+
+    <!-- ─── NAV ─── -->
+    <header class="site-header" id="siteHeader">
+        <nav class="nav-inner">
+            <a href="/" class="brand">
+                <svg class="brand-icon" viewBox="0 0 28 28" fill="none">
+                    <path d="M14 2L4 7v8c0 5.55 4.3 10.74 10 12 5.7-1.26 10-6.45 10-12V7L14 2z" fill="url(#sg)" />
+                    <path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="sg" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6366f1" />
+                            <stop offset="1" stop-color="#06b6d4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="brand-name">FraudGuard<span class="brand-ai"> AI</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#how" class="nav-link">How it Works</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+            </ul>
+            <a href="/detect" class="nav-cta">Detect Fraud →</a>
+            <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+        </nav>
+    </header>
+
+    <!-- ════════════════════════════════════════
+     SECTION 1 — HERO
+═════════════════════════════════════════ -->
+    <section class="s-hero" id="hero">
+
+        <!-- Parallax layers driven by scroll -->
+        <div class="parallax-layer" data-depth="0.15" id="pxBg">
+            <div class="hero-orb orb-a"></div>
+            <div class="hero-orb orb-b"></div>
+        </div>
+
+        <div class="hero-center">
+            <!-- Tag line -->
+            <div class="hero-tag reveal-clip" data-reveal="tag">
+                <span class="tag-dot"></span>
+                College Project · Machine Learning · Python + Flask
             </div>
 
-            <h1 class="hero-title">
-                Protect Your Payments with
-                <span class="text-gradient">AI-Powered Security</span>
+            <!-- Hero headline — plain HTML, no JS splitting -->
+            <h1 class="hero-h1" id="heroH1">
+                Detect Payment Fraud
+                <span class="h1-line2">
+                    <span class="h1-with">with</span>
+                    <span class="h1-grad">Artificial Intelligence</span>
+                </span>
             </h1>
 
-            <p class="hero-subtitle">
-                Advanced machine learning algorithms analyze millions of transactions in real-time,
-                <br>detecting fraudulent patterns before they cause damage.
+            <p class="hero-sub" id="heroSub">
+                A Random Forest model trained on 6.3M transactions —
+                identify fraudulent TRANSFER &amp; CASH_OUT patterns in real time.
             </p>
 
-            <div class="hero-cta">
-                <a href="/detect" class="btn-hero-primary">
-                    <span>Start Detection</span>
-                    <span class="btn-icon">→</span>
+            <div class="hero-btns" id="heroBtns">
+                <a href="/detect" class="btn-primary">
+                    Analyze a Transaction
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
                 </a>
-                <a href="#features" class="btn-hero-secondary">
-                    <span>Learn More</span>
-                </a>
+                <a href="#how" class="btn-ghost smooth-scroll">See how it works ↓</a>
             </div>
+        </div>
 
-            <!-- Animated Stats -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-icon">🚀</div>
-                    <div class="stat-number" data-target="99.8">0</div>
-                    <div class="stat-label">Accuracy</div>
+        <!-- Shield visual — transforms on scroll -->
+        <div class="hero-shield-wrap" id="heroShield">
+            <div class="shield-halo halo-a"></div>
+            <div class="shield-halo halo-b"></div>
+            <div class="shield-halo halo-c"></div>
+            <svg class="shield-svg" viewBox="0 0 120 140" fill="none">
+                <path d="M60 8L12 30v36c0 30.6 21.2 59.2 48 66.4C87.2 125.2 108 96.6 108 66V30L60 8z" fill="url(#shg)"
+                    stroke="rgba(255,255,255,.1)" stroke-width="1" />
+                <path d="M42 68l14 16L78 52" stroke="white" stroke-width="5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <defs>
+                    <linearGradient id="shg" x1="12" y1="8" x2="108" y2="136" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#6366f1" />
+                        <stop offset=".5" stop-color="#4f46e5" />
+                        <stop offset="1" stop-color="#06b6d4" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <!-- Data chips -->
+            <div class="d-chip chip-safe  c1"><span class="cdot safe"></span>TRANSFER · Safe</div>
+            <div class="d-chip chip-fraud c2"><span class="cdot warn"></span>CASH_OUT · Flagged</div>
+            <div class="d-chip chip-safe  c3"><span class="cdot safe"></span>PAYMENT · Verified</div>
+        </div>
+
+        <!-- scroll cue -->
+        <div class="scroll-cue">
+            <div class="scroll-cue-line"></div>
+            <span>scroll</span>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+     SECTION 2 — ABOUT (morph reveal)
+═════════════════════════════════════════ -->
+    <section class="s-about" id="about">
+        <div class="about-inner">
+            <div class="about-label morph-in" data-morph="left">About the Project</div>
+            <h2 class="about-h2 morph-in" data-morph="left" data-morph-delay="80">
+                A machine learning system that learns to think like a fraud investigator.
+            </h2>
+            <div class="about-grid">
+                <div class="about-text morph-in" data-morph="left" data-morph-delay="160">
+                    <p>Built with Python, scikit-learn, and Flask, this project applies classical ML techniques to the
+                        PaySim financial dataset — 6.3 million synthetic mobile money transactions.</p>
+                    <p>The model detects fraudulent <strong>TRANSFER</strong> and <strong>CASH_OUT</strong> operations
+                        using six engineered features: transaction type, amount, and four balance signals.</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-number" data-target="100">0</div>
-                    <div class="stat-label">MS Response</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🌍</div>
-                    <div class="stat-number" data-target="1000000">0</div>
-                    <div class="stat-label">Transactions Secured</div>
+                <div class="about-stats morph-in" data-morph="right" data-morph-delay="100">
+                    <div class="ast">
+                        <div class="ast-val count-up" data-target="6.3" data-suffix="M">6.3M</div>
+                        <div class="ast-key">Training Records</div>
+                    </div>
+                    <div class="ast">
+                        <div class="ast-val count-up" data-target="6" data-suffix="">6</div>
+                        <div class="ast-key">Input Features</div>
+                    </div>
+                    <div class="ast">
+                        <div class="ast-val count-up" data-target="99.8" data-suffix="%">99.8%</div>
+                        <div class="ast-key">F1 Accuracy</div>
+                    </div>
+                    <div class="ast">
+                        <div class="ast-val count-up" data-target="3" data-suffix="">3</div>
+                        <div class="ast-key">Models Evaluated</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features-section" id="features">
-        <h2 class="section-title">Why Choose FraudGuard AI?</h2>
+    <!-- ════════════════════════════════════════
+     SECTION 3 — HOW IT WORKS (timeline)
+═════════════════════════════════════════ -->
+    <section class="s-how" id="how">
+        <div class="how-inner">
+            <p class="section-eyebrow morph-in" data-morph="up">Process</p>
+            <h2 class="section-h2 morph-in" data-morph="up" data-morph-delay="80">How it works</h2>
 
-        <div class="features-grid">
-            <!-- Feature 1 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">🧠</div>
+            <div class="timeline">
+                <div class="tl-line">
+                    <div class="tl-progress" id="tlProgress"></div>
                 </div>
-                <h3 class="feature-title">Machine Learning</h3>
-                <p class="feature-description">
-                    Our advanced AI models continuously learn from transaction patterns,
-                    adapting to new fraud techniques in real-time.
-                </p>
-            </div>
 
-            <!-- Feature 2 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">⚡</div>
+                <div class="tl-item morph-in" data-morph="up" data-morph-delay="0">
+                    <div class="tl-dot"></div>
+                    <div class="tl-num">01</div>
+                    <h3>Data Input</h3>
+                    <p>Enter transaction type, amount, and four balance fields (origin old/new, destination old/new). No
+                        personal data required.</p>
                 </div>
-                <h3 class="feature-title">Real-Time Analysis</h3>
-                <p class="feature-description">
-                    Instant fraud detection with <100ms response time, ensuring seamless user experience without delays.
-                        </p>
-            </div>
-
-            <!-- Feature 3 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">🎯</div>
+                <div class="tl-item morph-in" data-morph="up" data-morph-delay="120">
+                    <div class="tl-dot"></div>
+                    <div class="tl-num">02</div>
+                    <h3>Feature Engineering</h3>
+                    <p>Transaction type is label-encoded. Balance deltas are computed implicitly. The vector is passed
+                        to the trained model.</p>
                 </div>
-                <h3 class="feature-title">99.8% Accuracy</h3>
-                <p class="feature-description">
-                    Trained on millions of transactions with balanced class weighting
-                    to minimize false positives and catch real fraud.
-                </p>
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">🔒</div>
+                <div class="tl-item morph-in" data-morph="up" data-morph-delay="240">
+                    <div class="tl-dot"></div>
+                    <div class="tl-num">03</div>
+                    <h3>ML Inference</h3>
+                    <p>A balanced Random Forest classifier — trained with class-weight correction — predicts fraud vs.
+                        legitimate in milliseconds.</p>
                 </div>
-                <h3 class="feature-title">Secure & Private</h3>
-                <p class="feature-description">
-                    Enterprise-grade security with encrypted data transmission
-                    and zero data retention policies.
-                </p>
-            </div>
-
-            <!-- Feature 5 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">📊</div>
+                <div class="tl-item morph-in" data-morph="up" data-morph-delay="360">
+                    <div class="tl-dot"></div>
+                    <div class="tl-num">04</div>
+                    <h3>Result Displayed</h3>
+                    <p>A clear verdict: <strong style="color:#10b981">Safe</strong> or <strong
+                            style="color:#ef4444">Fraud Detected</strong> — with visual feedback and next actions.</p>
                 </div>
-                <h3 class="feature-title">Detailed Insights</h3>
-                <p class="feature-description">
-                    Comprehensive analysis of transaction patterns with
-                    clear indicators of fraudulent behavior.
-                </p>
-            </div>
-
-            <!-- Feature 6 -->
-            <div class="feature-card card-3d">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">🌐</div>
-                </div>
-                <h3 class="feature-title">Global Coverage</h3>
-                <p class="feature-description">
-                    Supports all major transaction types: Transfers, Payments,
-                    Cash-Out, Cash-In, and Debit operations.
-                </p>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-content">
-            <h2 class="cta-title">Ready to Secure Your Transactions?</h2>
-            <p class="cta-subtitle">Start detecting fraud in seconds with our AI-powered platform</p>
-            <a href="/detect" class="btn-cta">
-                <span>Try FraudGuard Now</span>
-                <span class="btn-icon">→</span>
+    <!-- ════════════════════════════════════════
+     SECTION 4 — FEATURES (scroll morphs)
+═════════════════════════════════════════ -->
+    <section class="s-features" id="features">
+        <div class="features-inner">
+            <p class="section-eyebrow morph-in" data-morph="up">Capabilities</p>
+            <h2 class="section-h2 morph-in" data-morph="up" data-morph-delay="80">
+                What the model can do
+            </h2>
+
+            <div class="feat-bento">
+
+                <div class="bento-card bento-lg morph-in" data-morph="up" data-morph-delay="0">
+                    <div class="bento-icon" style="--c:#6366f1">🧠</div>
+                    <h3>Random Forest Classifier</h3>
+                    <p>An ensemble of decision trees jointly vote on whether a transaction is fraudulent. Robust to
+                        outliers and noise, with class-weight=balanced for imbalanced fraud data.</p>
+                </div>
+
+                <div class="bento-card morph-in" data-morph="up" data-morph-delay="80">
+                    <div class="bento-icon" style="--c:#06b6d4">⚡</div>
+                    <h3>Real-Time Prediction</h3>
+                    <p>Sub-100ms inference via Flask REST API.</p>
+                </div>
+
+                <div class="bento-card morph-in" data-morph="up" data-morph-delay="160">
+                    <div class="bento-icon" style="--c:#10b981">🎯</div>
+                    <h3>5 Transaction Types</h3>
+                    <p>TRANSFER, CASH_OUT, CASH_IN, PAYMENT, DEBIT — all handled.</p>
+                </div>
+
+                <div class="bento-card morph-in" data-morph="up" data-morph-delay="80">
+                    <div class="bento-icon" style="--c:#f59e0b">⚖️</div>
+                    <h3>Imbalance Handling</h3>
+                    <p>Only ~0.13% of records are fraud. Undersampling + class weighting ensures the model learns fraud
+                        patterns, not just non-fraud.</p>
+                </div>
+
+                <div class="bento-card morph-in" data-morph="up" data-morph-delay="160">
+                    <div class="bento-icon" style="--c:#8b5cf6">📊</div>
+                    <h3>Model Comparison</h3>
+                    <p>Logistic Regression, Decision Tree, and Random Forest were all evaluated; best F1 wins.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+     SECTION 5 — CTA
+═════════════════════════════════════════ -->
+    <section class="s-cta">
+        <div class="cta-inner morph-in" data-morph="up">
+            <div class="cta-glow"></div>
+            <h2>Ready to try it?</h2>
+            <p>Submit a transaction and get an instant AI-powered verdict.</p>
+            <a href="/detect" class="btn-primary btn-large">
+                Analyze a Transaction →
             </a>
         </div>
     </section>
 
-    <!-- Counter Animation Script -->
-    <script>
-        // Animated counter for stats
-        function animateCounter(element) {
-            const target = parseFloat(element.getAttribute('data-target'));
-            const duration = 2000;
-            const increment = target / (duration / 16);
-            let current = 0;
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span class="brand" style="opacity:.5;font-size:.95rem">
+                <svg class="brand-icon" viewBox="0 0 28 28" fill="none" style="width:20px;height:20px">
+                    <path d="M14 2L4 7v8c0 5.55 4.3 10.74 10 12 5.7-1.26 10-6.45 10-12V7L14 2z" fill="url(#sgf)" />
+                    <path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="sgf" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6366f1" />
+                            <stop offset="1" stop-color="#06b6d4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                FraudGuard AI
+            </span>
+            <p class="footer-copy">College Project · Python · scikit-learn · Flask</p>
+        </div>
+    </footer>
 
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-
-                // Format number
-                if (target >= 1000000) {
-                    element.textContent = (current / 1000000).toFixed(1) + 'M+';
-                } else if (target >= 1000) {
-                    element.textContent = (current / 1000).toFixed(1) + 'K+';
-                } else {
-                    element.textContent = current.toFixed(1) + '%';
-                }
-            }, 16);
-        }
-
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.3,
-            rootMargin: '0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Animate stats
-                    if (entry.target.classList.contains('stats-row')) {
-                        const numbers = entry.target.querySelectorAll('.stat-number');
-                        numbers.forEach(num => animateCounter(num));
-                        observer.unobserve(entry.target);
-                    }
-
-                    // Animate feature cards
-                    if (entry.target.classList.contains('feature-card')) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements
-        window.addEventListener('load', () => {
-            const statsRow = document.querySelector('.stats-row');
-            if (statsRow) observer.observe(statsRow);
-
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-                observer.observe(card);
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='scroll.js') }}"></script>
 </body>
 
 </html>
