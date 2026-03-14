@@ -1,0 +1,35 @@
+# Development & training files
+train_model.py
+debug_model.py
+evaluate_model_performance.py
+probe_model_boundary.py
+test_model.py
+test_actual_fraud.py
+test_endpoint.py
+verify_fix.py
+payment detection.py
+
+# Data & DB
+*.db
+*.csv
+*.sqlite3
+
+# Git
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static images (chart PNGs from training)
+static/fraud_counts.png
+static/transaction_types.png

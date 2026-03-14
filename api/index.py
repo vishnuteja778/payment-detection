@@ -1,0 +1,11 @@
+"""
+Vercel serverless entry point.
+Vercel looks for a WSGI-compatible `app` object in this file.
+"""
+import sys
+import os
+
+# Add the project root to the Python path so we can import app.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app import app

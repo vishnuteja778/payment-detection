@@ -3,16 +3,21 @@ import pickle
 import numpy as np
 import os
 import json
-import sqlite3
 from datetime import datetime
 from fpdf import FPDF
 import io
-import tempfile
 
-app = Flask(__name__)
+# ─── Path helpers (works both locally and on Vercel) ───
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 
 # ─── Model loading ───
-model_path = 'model.pkl'
+model_path = os.path.join(BASE_DIR, 'model.pkl')
 model = None
 
 def load_prediction_model():
@@ -29,38 +34,39 @@ def load_prediction_model():
 
 load_prediction_model()
 
-# ─── Database setup ───
-DB_PATH = 'transactions.db'
+# ─── In-memory transaction store (Vercel has read-only filesystem) ───
+# Transactions persist within a single function invocation only.
+# For persistent storage, integrate an external database (e.g., Vercel Postgres, Supabase).
+transaction_store = []
+txn_counter = 0
 
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS transactions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timestamp TEXT NOT NULL,
-        type TEXT NOT NULL,
-        amount REAL NOT NULL,
-        oldbalanceOrg REAL NOT NULL,
-        newbalanceOrig REAL NOT NULL,
-        oldbalanceDest REAL NOT NULL,
-        newbalanceDest REAL NOT NULL,
-        prediction INTEGER NOT NULL,
-        confidence REAL NOT NULL
-    )''')
-    conn.commit()
-    conn.close()
+def save_transaction(txn_data):
+    """Save a transaction to in-memory store and return its ID."""
+    global txn_counter
+    txn_counter += 1
+    txn_data['id'] = txn_counter
+    transaction_store.insert(0, txn_data)  # newest first
+    # Keep only last 50
+    if len(transaction_store) > 50:
+        transaction_store.pop()
+    return txn_counter
 
-init_db()
+def get_transaction(txn_id):
+    """Retrieve a transaction by ID."""
+    for txn in transaction_store:
+        if txn['id'] == txn_id:
+            return txn
+    return None
 
-def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+def get_all_transactions():
+    """Return all stored transactions (newest first)."""
+    return transaction_store
 
 # ─── Helper: Load JSON data ───
 def load_json(filepath, default=None):
-    if os.path.exists(filepath):
-        with open(filepath, 'r') as f:
+    full_path = os.path.join(BASE_DIR, filepath) if not os.path.isabs(filepath) else filepath
+    if os.path.exists(full_path):
+        with open(full_path, 'r') as f:
             return json.load(f)
     return default or {}
 
@@ -122,17 +128,20 @@ def predict():
         print(f"\n=== PREDICTION ===")
         print(f"Type={type_val}, Amount={amount}, Prediction={prediction}, Confidence={confidence}%")
 
-        # Save to history
+        # Save to in-memory history
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute('''INSERT INTO transactions
-            (timestamp, type, amount, oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest, prediction, confidence)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (timestamp, type_val, amount, oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest, prediction, confidence))
-        conn.commit()
-        txn_id = cursor.lastrowid
-        conn.close()
+        txn_data = {
+            'timestamp': timestamp,
+            'type': type_val,
+            'amount': amount,
+            'oldbalanceOrg': oldbalanceOrg,
+            'newbalanceOrig': newbalanceOrig,
+            'oldbalanceDest': oldbalanceDest,
+            'newbalanceDest': newbalanceDest,
+            'prediction': prediction,
+            'confidence': confidence
+        }
+        txn_id = save_transaction(txn_data)
 
         return render_template('result.html',
                              prediction=prediction,
@@ -151,11 +160,7 @@ def predict():
 @app.route('/history')
 def history():
     """Transaction history page"""
-    conn = get_db()
-    transactions = conn.execute(
-        'SELECT * FROM transactions ORDER BY id DESC LIMIT 50'
-    ).fetchall()
-    conn.close()
+    transactions = get_all_transactions()
     return render_template('history.html', transactions=transactions)
 
 
@@ -181,9 +186,7 @@ def dashboard():
 @app.route('/report/<int:txn_id>')
 def report(txn_id):
     """Generate PDF report for a transaction"""
-    conn = get_db()
-    txn = conn.execute('SELECT * FROM transactions WHERE id = ?', (txn_id,)).fetchone()
-    conn.close()
+    txn = get_transaction(txn_id)
 
     if not txn:
         return "Transaction not found", 404

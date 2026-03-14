@@ -155,14 +155,44 @@ def train_and_evaluate(X_train, X_test, y_train, y_test):
         rec = recall_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
         
-        results[name] = {'Accuracy': acc, 'Precision': prec, 'Recall': rec, 'F1': f1}
+        results[name] = {
+            'Accuracy': float(acc), 
+            'Precision': float(prec), 
+            'Recall': float(rec), 
+            'F1': float(f1)
+        }
         print(f"{name} Results: Accuracy={acc:.4f}, Precision={prec:.4f}, Recall={rec:.4f}, F1={f1:.4f}")
         
         if f1 > best_f1:
             best_f1 = f1
             best_model = model
 
+    # Save metrics for Dashboard
+    with open('model_metrics.json', 'w') as f:
+        json.dump(results, f, indent=4)
+
+    # Save Feature Importance for Dashboard (from Random Forest)
+    if "Random Forest" in models:
+        rf = models["Random Forest"]
+        fi = {
+            "features": list(X_train.columns),
+            "importances": rf.feature_importances_.tolist()
+        }
+        with open('feature_importance.json', 'w') as f:
+            json.dump(fi, f, indent=4)
+
+    # Save Confusion Matrix for Dashboard (from Best Model)
+    y_pred_best = best_model.predict(X_test)
+    cm = confusion_matrix(y_test, y_pred_best)
+    cm_data = {
+        "labels": ["Legitimate", "Fraud"],
+        "matrix": cm.tolist()
+    }
+    with open('confusion_matrix.json', 'w') as f:
+        json.dump(cm_data, f, indent=4)
+
     print("\nBest Model selected based on F1-Score.")
+    print("Dashboard metrics saved.")
     return best_model, results
 
 def save_model(model, filename='model.pkl'):
