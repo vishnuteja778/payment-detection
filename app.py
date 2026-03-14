@@ -7,14 +7,10 @@ from datetime import datetime
 from fpdf import FPDF
 import io
 
-# ─── Path helpers (works both locally and on Vercel) ───
+# ─── Path helpers ───
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-app = Flask(
-    __name__,
-    template_folder=os.path.join(BASE_DIR, 'templates'),
-    static_folder=os.path.join(BASE_DIR, 'static')
-)
+app = Flask(__name__)
 
 # ─── Model loading ───
 model_path = os.path.join(BASE_DIR, 'model.pkl')
